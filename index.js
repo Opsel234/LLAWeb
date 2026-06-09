@@ -1,6 +1,10 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
+
+// Servir archivos estáticos (aquí le decimos que busque el CSS en la raíz o carpetas)
+app.use(express.static(__dirname));
 
 function generarPaginaCompleta() {
   return `
@@ -10,64 +14,21 @@ function generarPaginaCompleta() {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>LLAWeb - Sistema Escolar</title>
-        <style>
-            /* Efecto CRT y Distorsión estilo Buckshot Roulette */
-            body { 
-                font-family: 'Courier New', Courier, monospace; 
-                background-color: #020502; 
-                color: #00ff00; 
-                margin: 0; 
-                padding: 0; 
-                overflow: hidden; 
-                width: 100vw; 
-                height: 100vh;
-                animation: flicker 0.15s infinite;
-            }
-
-            /* Líneas de escaneo del monitor viejo */
-            body::before {
-                content: " ";
-                display: block;
-                position: fixed;
-                top: 0; left: 0; bottom: 0; right: 0;
-                background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-                z-index: 99999;
-                background-size: 100% 4px, 3px 100%;
-                pointer-events: none;
-            }
-
-            /* Animación de parpadeo/distorsión de brillo */
-            @keyframes flicker {
-                0% { opacity: 0.98; }
-                50% { opacity: 1; }
-                100% { opacity: 0.99; }
-            }
-
-            #pantalla-inicio { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; }
-            .btn-encender { background-color: #000; border: 2px solid #00ff00; color: #00ff00; padding: 20px 40px; font-size: 20px; font-family: inherit; cursor: pointer; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2); transition: 0.3s; text-transform: uppercase; font-weight: bold; }
-            .btn-encender:hover { background-color: #00ff00; color: #000; box-shadow: 0 0 25px #00ff00; }
-            
-            #terminal-login { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000000; z-index: 9999; display: none; flex-direction: column; justify-content: flex-start; box-sizing: border-box; padding: 40px; overflow-y: auto; }
-            .consola-caja { width: 100%; max-width: 900px; margin: 0 auto; text-transform: uppercase; }
-            .log-linea { font-size: 15px; line-height: 22px; margin-bottom: 2px; white-space: pre-wrap; font-weight: bold; text-shadow: 0 0 5px rgba(0, 255, 0, 0.7); }
-            
-            .input-linea { display: flex; align-items: center; margin-top: 25px; }
-            .prompt { color: #00ff00; font-weight: bold; margin-right: 15px; flex-shrink: 0; text-shadow: 0 0 5px rgba(0, 255, 0, 0.7); }
-            .input-linea input { background: transparent; border: none; color: #00ff00; font-family: inherit; font-size: 16px; outline: none; width: 100%; caret-color: #00ff00; text-transform: uppercase; font-weight: bold; text-shadow: 0 0 5px rgba(0, 255, 0, 0.7); }
-            
-            #contenido-principal { display: none; padding: 40px 20px; text-align: center; overflow-y: auto; height: 100vh; box-sizing: border-box; }
-            h1 { color: #8a2be2; text-shadow: 0 0 10px #8a2be2; }
-            h2 { color: #00ffcc; }
-            .menu { display: flex; justify-content: center; gap: 15px; margin-top: 20px; margin-bottom: 40px; flex-wrap: wrap; }
-            .boton { background-color: #111; border: 2px solid #8a2be2; color: white; padding: 12px 24px; font-size: 15px; cursor: pointer; border-radius: 8px; text-decoration: none; transition: 0.3s; font-family: sans-serif; }
-            .boton:hover { background-color: #8a2be2; color: white; transform: scale(1.05); box-shadow: 0 0 15px #8a2be2; }
-            .btn-home { border-color: #00ffcc; color: #00ffcc; }
-            .btn-home:hover { background-color: #00ffcc; color: black; box-shadow: 0 0 15px #00ffcc; }
-            .contenedor-seccion { background-color: #111; border-radius: 12px; padding: 30px; max-width: 800px; margin: 0 auto; border: 1px solid #333; }
-            .usuario-activo { font-size: 16px; color: #00ffcc; margin-bottom: 20px; }
-        </style>
+        <link rel="stylesheet" href="/style.css">
     </head>
     <body>
+        <svg width="0" height="0" style="position:absolute">
+          <filter id="chromatic-aberration">
+            <feOffset in="SourceGraphic" dx="1.5" dy="0" result="red"/>
+            <feOffset in="SourceGraphic" dx="-1.5" dy="0" result="blue"/>
+            <feColorMatrix in="red" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="redMatrix"/>
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="greenMatrix"/>
+            <feColorMatrix in="blue" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blueMatrix"/>
+            <feBlend in="redMatrix" in2="greenMatrix" mode="screen" result="rb"/>
+            <feBlend in="rb" in2="blueMatrix" mode="screen"/>
+          </filter>
+        </svg>
+
         <div id="pantalla-inicio">
             <button class="btn-encender" id="btn-start">⚡ ENTER LOBBY ⚡</button>
         </div>
@@ -122,7 +83,6 @@ function generarPaginaCompleta() {
                 terminal.style.display = 'flex';
                 historial.innerHTML = '';
                 
-                // --- SECUENCIA CON NUEVO ESTILO RETRO ---
                 setTimeout(() => agregarLog('NONE Standard Electronics'), 50);
                 setTimeout(() => agregarLog('Personal Computer Model - 98A'), 150);
                 setTimeout(() => agregarLog('\\nU-Boot 2020.10-rc2-00109-g28cd2a1bc7 (Jan 10 2026 - 18:23:41 -0400)'), 400);
@@ -174,5 +134,5 @@ app.get('/pdf', (req, res) => { res.send(generarPaginaCompleta()); });
 app.get('/promos', (req, res) => { res.send(generarPaginaCompleta()); });
 
 app.listen(PORT, () => {
-  console.log(`Servidor con efectos CRT corriendo en puerto ${PORT}`);
+  console.log(`Servidor limpio corriendo en puerto ${PORT}`);
 });
