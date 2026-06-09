@@ -104,17 +104,57 @@ function generarPaginaCompleta() {
                 } else {
                     terminal.style.display = 'flex';
                     
-                    // Secuencia corregida y exacta con tus comandos
+                    // Tu secuencia de comandos con tiempos calibrados
                     setTimeout(() => agregarLog(' starting systems...'), 100);
                     setTimeout(() => agregarLog(' llaweb@server:~$ sudo su apt update', 'cmd'), 900);
                     
                     setTimeout(() => agregarLog(' Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease'), 1700);
                     setTimeout(() => agregarLog(' Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]'), 2300);
                     
-                    // Bloques de carga simulada con asteriscos (*)
+                    // Bloques de carga que editaste (organizados de forma fluida)
                     setTimeout(() => agregarLog(' Fetching updates: [*...................] 5%'), 2900);
-                    setTimeout(() => agregarLog(' Fetching updates: [*****...............] 25%'), 3400);
-                    setTimeout(() => agregarLog(' Fetching updates: [*******.............] 34%'), 3560);
-                    setTimeout(() => agregarLog(' Fetching updates: [***************.....] 68%'), 5700);
-                    setTimeout(() => agregarLog(' Fetching updates: [*******************.] 92%'), 7700);
-                    setTimeout(() => agregarLog(' Fetching updates: [********************] 100%'), 10000);
+                    setTimeout(() => agregarLog(' Fetching updates: [*****...............] 25%'), 3500);
+                    setTimeout(() => agregarLog(' Fetching updates: [*******.............] 34%'), 4100);
+                    setTimeout(() => agregarLog(' Fetching updates: [***************.....] 68%'), 4900);
+                    setTimeout(() => agregarLog(' Fetching updates: [*******************.] 92%'), 5700);
+                    setTimeout(() => agregarLog(' Fetching updates: [********************] 100%'), 6400);
+
+                    // Finalización del sistema e input de usuario
+                    setTimeout(() => agregarLog(' Reading package lists... Done'), 7000);
+                    setTimeout(() => agregarLog(' Building dependency tree... Done'), 7500);
+                    setTimeout(() => agregarLog(' All packages are up to date.'), 8000);
+                    setTimeout(() => agregarLog(' loading', 'info'), 8600);
+                    setTimeout(() => agregarLog(' check in', 'info'), 9100);
+                    
+                    setTimeout(() => {
+                        agregarLog(' ==> Por favor, introduce tu nombre para registrar la sesión:');
+                        cajaInput.style.display = 'block';
+                        inputName.focus();
+                    }, 9800);
+                }
+            });
+
+            inputName.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && inputName.value.trim() !== '') {
+                    const nombreUsuario = inputName.value.trim();
+                    localStorage.setItem('llaweb_username', nombreUsuario);
+                    terminal.style.display = 'none';
+                    principal.style.display = 'block';
+                    mostrarUser.innerText = '💻 Agente Activo: ' + nombreUsuario;
+                }
+            });
+        </script>
+    </body>
+    </html>
+  `;
+}
+
+app.get('/', (req, res) => { res.send(generarPaginaCompleta()); });
+app.get('/musica', (req, res) => { res.send(generarPaginaCompleta()); });
+app.get('/juegos', (req, res) => { res.send(generarPaginaCompleta()); });
+app.get('/pdf', (req, res) => { res.send(generarPaginaCompleta()); });
+app.get('/promos', (req, res) => { res.send(generarPaginaCompleta()); });
+
+app.listen(PORT, () => {
+  console.log(`Servidor estable corriendo en el puerto ${PORT}`);
+});
