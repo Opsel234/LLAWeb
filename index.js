@@ -18,9 +18,9 @@ function generarPaginaCompleta() {
             #terminal-login { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0a0a0a; z-index: 9999; display: none; flex-direction: column; justify-content: flex-start; box-sizing: border-box; padding: 30px; overflow-y: auto; }
             .consola-caja { width: 100%; max-width: 900px; margin: 0 auto; }
             .log-linea { display: flex; font-size: 16px; line-height: 24px; margin-bottom: 4px; }
-            .log-timestamp { color: #666; width: 125px; flex-shrink: 0; user-select: none; }
+            .log-timestamp { color: #666; width: 135px; flex-shrink: 0; user-select: none; }
             .log-mensaje { color: #00ff00; white-space: pre-wrap; }
-            .log-cmd { color: #fff; font-weight: bold; } /* Color blanco para los comandos escritos */
+            .log-cmd { color: #fff; font-weight: bold; }
             .log-info { color: #00bfff; }
             .input-linea { display: flex; align-items: center; margin-top: 15px; }
             .prompt { color: #00ff00; font-weight: bold; margin-right: 10px; flex-shrink: 0; }
@@ -29,4 +29,92 @@ function generarPaginaCompleta() {
             h1 { color: #8a2be2; text-shadow: 0 0 10px #8a2be2; }
             h2 { color: #00ffcc; }
             .menu { display: flex; justify-content: center; gap: 15px; margin-top: 20px; margin-bottom: 40px; flex-wrap: wrap; }
-            .boton { background-color: #111; border: 2px solid #8a2be2; color: white; padding: 12px 24px; font-
+            .boton { background-color: #111; border: 2px solid #8a2be2; color: white; padding: 12px 24px; font-size: 15px; cursor: pointer; border-radius: 8px; text-decoration: none; transition: 0.3s; font-family: sans-serif; }
+            .boton:hover { background-color: #8a2be2; color: white; transform: scale(1.05); box-shadow: 0 0 15px #8a2be2; }
+            .btn-home { border-color: #00ffcc; color: #00ffcc; }
+            .btn-home:hover { background-color: #00ffcc; color: black; box-shadow: 0 0 15px #00ffcc; }
+            .contenedor-seccion { background-color: #111; border-radius: 12px; padding: 30px; max-width: 800px; margin: 0 auto; border: 1px solid #333; }
+            .usuario-activo { font-size: 16px; color: #00ffcc; margin-bottom: 20px; }
+        </style>
+    </head>
+    <body>
+        <div id="pantalla-inicio">
+            <button class="btn-encender" id="btn-start">⚡ Iniciar Sistema ⚡</button>
+        </div>
+        <div id="terminal-login">
+            <div class="consola-caja" id="consola-historial"></div>
+            <div class="consola-caja" id="caja-input" style="display: none;">
+                <div class="input-linea">
+                    <span class="prompt">llaweb@system:~$</span>
+                    <input type="text" id="nickname-input" autocomplete="off" placeholder="ingresa_tu_nombre...">
+                </div>
+            </div>
+        </div>
+        <div id="contenido-principal">
+            <h1>🎮 LLAWeb 🚀</h1>
+            <div class="usuario-activo" id="mostrar-usuario"></div>
+            <div class="menu">
+                <a href="/" class="boton btn-home">🏠 Inicio</a>
+                <a href="/musica" class="boton">📺 Música</a>
+                <a href="/juegos" class="boton">🕹️ Juegos Gratis</a>
+                <a href="/pdf" class="boton">📄 Convertidor PDF</a>
+                <a href="/promos" class="boton">📢 Promociones</a>
+            </div>
+            <div class="contenedor-seccion">
+                <h2>¡Bienvenido al panel principal!</h2>
+                <p>Navega usando los botones de arriba para explorar las herramientas.</p>
+            </div>
+        </div>
+        <script>
+            const pInicio = document.getElementById('pantalla-inicio');
+            const terminal = document.getElementById('terminal-login');
+            const principal = document.getElementById('contenido-principal');
+            const btnStart = document.getElementById('btn-start');
+            const inputName = document.getElementById('nickname-input');
+            const mostrarUser = document.getElementById('mostrar-usuario');
+            const historial = document.getElementById('consola-historial');
+            const cajaInput = document.getElementById('caja-input');
+            const usuarioGuardado = localStorage.getItem('llaweb_username');
+
+            function obtenerHora() {
+                const ahora = new Date();
+                return ahora.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            }
+
+            function agregarLog(mensaje, tipo = 'normal') {
+                const linea = document.createElement('div');
+                linea.className = 'log-linea';
+                let claseMensaje = 'log-mensaje';
+                if (tipo === 'info') claseMensaje = 'log-mensaje log-info';
+                if (tipo === 'cmd') claseMensaje = 'log-mensaje log-cmd';
+                
+                linea.innerHTML = '<span class="log-timestamp">⟦' + obtenerHora() + '⟧</span><span class="' + claseMensaje + '">' + mensaje + '</span>';
+                historial.appendChild(linea);
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+
+            btnStart.addEventListener('click', function() {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                }
+                pInicio.style.display = 'none';
+                if (usuarioGuardado) {
+                    principal.style.display = 'block';
+                    mostrarUser.innerText = '💻 Agente Activo: ' + usuarioGuardado;
+                } else {
+                    terminal.style.display = 'flex';
+                    
+                    // Secuencia corregida y exacta con tus comandos
+                    setTimeout(() => agregarLog(' starting systems...'), 100);
+                    setTimeout(() => agregarLog(' llaweb@server:~$ sudo su apt update', 'cmd'), 900);
+                    
+                    setTimeout(() => agregarLog(' Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease'), 1700);
+                    setTimeout(() => agregarLog(' Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]'), 2300);
+                    
+                    // Bloques de carga simulada con asteriscos (*)
+                    setTimeout(() => agregarLog(' Fetching updates: [*...................] 5%'), 2900);
+                    setTimeout(() => agregarLog(' Fetching updates: [*****...............] 25%'), 3400);
+                    setTimeout(() => agregarLog(' Fetching updates: [*******.............] 34%'), 3560);
+                    setTimeout(() => agregarLog(' Fetching updates: [***************.....] 68%'), 5700);
+                    setTimeout(() => agregarLog(' Fetching updates: [*******************.] 92%'), 7700);
+                    setTimeout(() => agregarLog(' Fetching updates: [********************] 100%'), 10000);
