@@ -11,18 +11,49 @@ function generarPaginaCompleta() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>LLAWeb - Sistema Escolar</title>
         <style>
-            body { font-family: 'Courier New', Courier, monospace; background-color: #000000; color: #00ff00; margin: 0; padding: 0; overflow: hidden; width: 100vw; height: 100vh; }
+            /* Efecto CRT y Distorsión estilo Buckshot Roulette */
+            body { 
+                font-family: 'Courier New', Courier, monospace; 
+                background-color: #020502; 
+                color: #00ff00; 
+                margin: 0; 
+                padding: 0; 
+                overflow: hidden; 
+                width: 100vw; 
+                height: 100vh;
+                animation: flicker 0.15s infinite;
+            }
+
+            /* Líneas de escaneo del monitor viejo */
+            body::before {
+                content: " ";
+                display: block;
+                position: fixed;
+                top: 0; left: 0; bottom: 0; right: 0;
+                background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+                z-index: 99999;
+                background-size: 100% 4px, 3px 100%;
+                pointer-events: none;
+            }
+
+            /* Animación de parpadeo/distorsión de brillo */
+            @keyframes flicker {
+                0% { opacity: 0.98; }
+                50% { opacity: 1; }
+                100% { opacity: 0.99; }
+            }
+
             #pantalla-inicio { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; }
-            .btn-encender { background-color: #000; border: 2px solid #00ff00; color: #00ff00; padding: 20px 40px; font-size: 20px; font-family: inherit; cursor: pointer; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2); transition: 0.3s; }
+            .btn-encender { background-color: #000; border: 2px solid #00ff00; color: #00ff00; padding: 20px 40px; font-size: 20px; font-family: inherit; cursor: pointer; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2); transition: 0.3s; text-transform: uppercase; font-weight: bold; }
             .btn-encender:hover { background-color: #00ff00; color: #000; box-shadow: 0 0 25px #00ff00; }
             
             #terminal-login { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000000; z-index: 9999; display: none; flex-direction: column; justify-content: flex-start; box-sizing: border-box; padding: 40px; overflow-y: auto; }
             .consola-caja { width: 100%; max-width: 900px; margin: 0 auto; text-transform: uppercase; }
-            .log-linea { font-size: 15px; line-height: 22px; margin-bottom: 2px; white-space: pre-wrap; font-weight: bold; text-shadow: 0 0 3px rgba(0, 255, 0, 0.5); }
+            .log-linea { font-size: 15px; line-height: 22px; margin-bottom: 2px; white-space: pre-wrap; font-weight: bold; text-shadow: 0 0 5px rgba(0, 255, 0, 0.7); }
             
             .input-linea { display: flex; align-items: center; margin-top: 25px; }
-            .prompt { color: #00ff00; font-weight: bold; margin-right: 15px; flex-shrink: 0; }
-            .input-linea input { background: transparent; border: none; color: #00ff00; font-family: inherit; font-size: 16px; outline: none; width: 100%; caret-color: #00ff00; text-transform: uppercase; font-weight: bold; }
+            .prompt { color: #00ff00; font-weight: bold; margin-right: 15px; flex-shrink: 0; text-shadow: 0 0 5px rgba(0, 255, 0, 0.7); }
+            .input-linea input { background: transparent; border: none; color: #00ff00; font-family: inherit; font-size: 16px; outline: none; width: 100%; caret-color: #00ff00; text-transform: uppercase; font-weight: bold; text-shadow: 0 0 5px rgba(0, 255, 0, 0.7); }
             
             #contenido-principal { display: none; padding: 40px 20px; text-align: center; overflow-y: auto; height: 100vh; box-sizing: border-box; }
             h1 { color: #8a2be2; text-shadow: 0 0 10px #8a2be2; }
@@ -73,7 +104,6 @@ function generarPaginaCompleta() {
             const mostrarUser = document.getElementById('mostrar-usuario');
             const historial = document.getElementById('consola-historial');
             const cajaInput = document.getElementById('caja-input');
-            const usuarioGuardado = localStorage.getItem('llaweb_username');
 
             function agregarLog(mensaje) {
                 const linea = document.createElement('div');
@@ -89,57 +119,43 @@ function generarPaginaCompleta() {
                     document.documentElement.requestFullscreen().catch(() => {});
                 }
                 pInicio.style.display = 'none';
-                if (usuarioGuardado) {
-                    principal.style.display = 'block';
-                    mostrarUser.innerText = '💻 USER: ' + usuarioGuardado;
-                } else {
-                    terminal.style.display = 'flex';
-                    
-                    // --- SECUENCIA EXACTA ESTILO BUCKSHOT ROULETTE ---
-                    setTimeout(() => agregarLog('NONE Standard Electronics'), 50);
-                    setTimeout(() => agregarLog('Personal Computer Model - 98A'), 150);
-                    
-                    setTimeout(() => agregarLog('\\nU-Boot 2020.10-rc2-00109-g28cd2a1bc7 (Jan 10 2026 - 18:23:41 -0400)'), 400);
-                    
-                    setTimeout(() => agregarLog('\\nDRAM: 128MiB'), 700);
-                    setTimeout(() => agregarLog('MMC:   sdhci@01c28000: 0'), 850);
-                    setTimeout(() => agregarLog('Loading default environment'), 1000);
-                    
-                    setTimeout(() => agregarLog('\\nIn:    serial                       [##########]'), 1300);
-                    setTimeout(() => agregarLog('Out:   serial                       [##########]'), 1450);
-                    setTimeout(() => agregarLog('Err:   serial                       [##########]'), 1600);
-                    
-                    setTimeout(() => agregarLog('SYSTEM: Mesh connection found.'), 1900);
-                    setTimeout(() => agregarLog('IDE:   Bus 0: not available'), 2050);
-                    
-                    setTimeout(() => agregarLog('\\nHit any key to stop autoboot: 0'), 2450);
-                    setTimeout(() => agregarLog('reading uboot.env...'), 2600);
-                    setTimeout(() => agregarLog('FAST: Misaligned buffer address (007dfc10/007dfc40)'), 2700);
-                    
-                    setTimeout(() => agregarLog('6215 bytes read in 19 ms (319.3 KiB/s)'), 2850);
-                    setTimeout(() => agregarLog('reading u-boot.img...'), 3000);
-                    setTimeout(() => agregarLog('FAST: Misaligned buffer address (007dfc10/007dfc40)'), 3100);
-                    
-                    setTimeout(() => agregarLog('368940 bytes read in 178ms (2 MiB/s)'), 3250);
-                    setTimeout(() => agregarLog('Setting up image ID - 45227801'), 3400);
-                    
-                    setTimeout(() => {
-                        agregarLog('\\n== Flattened Device Tree blob at 00aa0000');
-                        agregarLog('## Booting os using the FDT blob at 00aa0000...');
-                    }, 3700);
+                terminal.style.display = 'flex';
+                historial.innerHTML = '';
+                
+                // --- SECUENCIA CON NUEVO ESTILO RETRO ---
+                setTimeout(() => agregarLog('NONE Standard Electronics'), 50);
+                setTimeout(() => agregarLog('Personal Computer Model - 98A'), 150);
+                setTimeout(() => agregarLog('\\nU-Boot 2020.10-rc2-00109-g28cd2a1bc7 (Jan 10 2026 - 18:23:41 -0400)'), 400);
+                setTimeout(() => agregarLog('\\nDRAM: 128MiB'), 700);
+                setTimeout(() => agregarLog('MMC:   sdhci@01c28000: 0'), 850);
+                setTimeout(() => agregarLog('Loading default environment'), 1000);
+                setTimeout(() => agregarLog('\\nIn:    serial                       [##########]'), 1300);
+                setTimeout(() => agregarLog('Out:   serial                       [##########]'), 1450);
+                setTimeout(() => agregarLog('Err:   serial                       [##########]'), 1600);
+                setTimeout(() => agregarLog('SYSTEM: Mesh connection found.'), 1900);
+                setTimeout(() => agregarLog('IDE:   Bus 0: not available'), 2050);
+                setTimeout(() => agregarLog('\\nHit any key to stop autoboot: 0'), 2450);
+                setTimeout(() => agregarLog('reading uboot.env...'), 2600);
+                setTimeout(() => agregarLog('FAST: Misaligned buffer address (007dfc10/007dfc40)'), 2700);
+                setTimeout(() => agregarLog('6215 bytes read in 19 ms (319.3 KiB/s)'), 2850);
+                setTimeout(() => agregarLog('reading u-boot.img...'), 3000);
+                setTimeout(() => agregarLog('FAST: Misaligned buffer address (007dfc10/007dfc40)'), 3100);
+                setTimeout(() => agregarLog('368940 bytes read in 178ms (2 MiB/s)'), 3250);
+                setTimeout(() => agregarLog('Setting up image ID - 45227801'), 3400);
+                setTimeout(() => {
+                    agregarLog('\\n== Flattened Device Tree blob at 00aa0000');
+                    agregarLog('## Booting os using the FDT blob at 00aa0000...');
+                }, 3700);
 
-                    // Aparece el input para poner el nombre de jugador
-                    setTimeout(() => {
-                        cajaInput.style.display = 'block';
-                        inputName.focus();
-                    }, 4300);
-                }
+                setTimeout(() => {
+                    cajaInput.style.display = 'block';
+                    inputName.focus();
+                }, 4300);
             });
 
             inputName.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && inputName.value.trim() !== '') {
                     const nombreUsuario = inputName.value.trim().toUpperCase();
-                    localStorage.setItem('llaweb_username', nombreUsuario);
                     terminal.style.display = 'none';
                     principal.style.display = 'block';
                     mostrarUser.innerText = '💻 USER: ' + nombreUsuario;
@@ -158,5 +174,5 @@ app.get('/pdf', (req, res) => { res.send(generarPaginaCompleta()); });
 app.get('/promos', (req, res) => { res.send(generarPaginaCompleta()); });
 
 app.listen(PORT, () => {
-  console.log(`Servidor Buckshot Roulette corriendo en el puerto ${PORT}`);
+  console.log(`Servidor con efectos CRT corriendo en puerto ${PORT}`);
 });
