@@ -1,3 +1,11 @@
+const express = require('express');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 10000;
+
+// Servir archivos estáticos como el style.css
+app.use(express.static(__dirname));
+
 function generarPaginaCompleta() {
   return `
     <!DOCTYPE html>
@@ -24,7 +32,7 @@ function generarPaginaCompleta() {
             <button class="btn-encender" id="btn-start">⚡ ENTER LOBBY ⚡</button>
         </div>
 
-        <div id="terminal-login">
+        <div id="terminal-login" style="display: none;">
             <div class="consola-caja" id="consola-historial"></div>
             <div class="consola-caja" id="caja-input" style="display: none;">
                 <div class="input-linea">
@@ -34,7 +42,7 @@ function generarPaginaCompleta() {
             </div>
         </div>
 
-        <div id="contenido-principal">
+        <div id="contenido-principal" style="display: none;">
             <h1>🎮 LLAWeb 🚀</h1>
             <div class="usuario-activo" id="mostrar-usuario"></div>
             <div class="menu">
@@ -68,40 +76,40 @@ function generarPaginaCompleta() {
                 btnGoogle.innerText = "Conectando con Google...";
                 btnGoogle.disabled = true;
 
-                // Abre un pop-up pequeño simulando el login real
                 const ancho = 500, alto = 600;
                 const izquierda = (screen.width / 2) - (ancho / 2);
                 const arriba = (screen.height / 2) - (alto / 2);
                 
+                // Abrimos la ventana falsa
                 const popup = window.open(
                     'about:blank', 
                     'GoogleAuth', 
-                    \`width=\${ancho},height=\${alto},top=\${arriba},left=\${izquierda},scrollbars=no,resizable=no\`
+                    'width=' + ancho + ',height=' + alto + ',top=' + arriba + ',left=' + izquierda + ',scrollbars=no,resizable=no'
                 );
 
-                // Escribe un diseño bonito dentro del pop-up falso
-                popup.document.write(\`
-                    <html lang="es">
-                    <head><title>Iniciando sesión con Google</title></head>
-                    <body style="font-family:sans-serif; text-align:center; padding-top:80px; background:#f8f9fa; color:#3c4043;">
-                        <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/web-24dp/logo_googleg_color_web_24dp.png" style="width:48px;">
-                        <h2>Iniciando sesión</h2>
-                        <p style="color:#5f6368;font-size:14px;">Vinculando cuenta con LLAWeb...</p>
-                        <div style="margin:40px auto; width:30px; height:30px; border:4px solid #f3f3f3; border-top:4px solid #4285f4; border-radius:50%; animation:spin 1s linear infinite;"></div>
-                        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-                    </body>
-                    </html>
-                \`);
+                // Insertamos el diseño interno usando comillas normales para evitar que falle Node
+                popup.document.write(
+                    '<html>' +
+                    '<head><title>Iniciando sesión con Google</title></head>' +
+                    '<body style="font-family:sans-serif; text-align:center; padding-top:80px; background:#f8f9fa; color:#3c4043;">' +
+                        '<img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/web-24dp/logo_googleg_color_web_24dp.png" style="width:48px;">' +
+                        '<h2>Iniciando sesión</h2>' +
+                        '<p style="color:#5f6368;font-size:14px;">Vinculando cuenta con LLAWeb...</p>' +
+                        '<div style="margin:40px auto; width:30px; height:30px; border:4px solid #f3f3f3; border-top:4px solid #4285f4; border-radius:50%; animation:spin 1s linear infinite;"></div>' +
+                        '<style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>' +
+                    '</body>' +
+                    '</html>'
+                );
 
-                // A los 2.5 segundos cierra el popup y da acceso
-                setTimeout(() => {
-                    popup.close();
-                    pGoogle.style.display = 'none'; // Quita el bloqueo
-                    pInicio.style.display = 'flex'; // Muestra el botón ENTER LOBBY
+                // Esperamos 2.5 segundos, cerramos popup y damos paso a la BIOS
+                setTimeout(function() {
+                    if (popup) popup.close();
+                    pGoogle.style.display = 'none';
+                    pInicio.style.display = 'flex';
                 }, 2500);
             });
 
-            // --- LÓGICA DE LA BIOS (IGUAL QUE ANTES) ---
+            // --- LÓGICA DE LA BIOS BUCKSHOT ROULETTE ---
             function agregarLog(mensaje) {
                 const linea = document.createElement('div');
                 linea.className = 'log-linea';
@@ -113,37 +121,37 @@ function generarPaginaCompleta() {
 
             btnStart.addEventListener('click', function() {
                 if (document.documentElement.requestFullscreen) {
-                    document.documentElement.requestFullscreen().catch(() => {});
+                    document.documentElement.requestFullscreen().catch(function() {});
                 }
                 pInicio.style.display = 'none';
                 terminal.style.display = 'flex';
                 historial.innerHTML = '';
                 
-                setTimeout(() => agregarLog('NONE Standard Electronics'), 50);
-                setTimeout(() => agregarLog('Personal Computer Model - 98A'), 150);
-                setTimeout(() => agregarLog('\\nU-Boot 2020.10-rc2-00109-g28cd2a1bc7 (Jan 10 2026 - 18:23:41 -0400)'), 400);
-                setTimeout(() => agregarLog('\\nDRAM: 128MiB'), 700);
-                setTimeout(() => agregarLog('MMC:   sdhci@01c28000: 0'), 850);
-                setTimeout(() => agregarLog('Loading default environment'), 1000);
-                setTimeout(() => agregarLog('\\nIn:    serial                       [##########]'), 1300);
-                setTimeout(() => agregarLog('Out:   serial                       [##########]'), 1450);
-                setTimeout(() => agregarLog('Err:   serial                       [##########]'), 1600);
-                setTimeout(() => agregarLog('SYSTEM: Mesh connection found.'), 1900);
-                setTimeout(() => agregarLog('IDE:   Bus 0: not available'), 2050);
-                setTimeout(() => agregarLog('\\nHit any key to stop autoboot: 0'), 2450);
-                setTimeout(() => agregarLog('reading uboot.env...'), 2600);
-                setTimeout(() => agregarLog('FAST: Misaligned buffer address (007dfc10/007dfc40)'), 2700);
-                setTimeout(() => agregarLog('6215 bytes read in 19 ms (319.3 KiB/s)'), 2850);
-                setTimeout(() => agregarLog('reading u-boot.img...'), 3000);
-                setTimeout(() => agregarLog('FAST: Misaligned buffer address (007dfc10/007dfc40)'), 3100);
-                setTimeout(() => agregarLog('368940 bytes read in 178ms (2 MiB/s)'), 3250);
-                setTimeout(() => agregarLog('Setting up image ID - 45227801'), 3400);
-                setTimeout(() => {
+                setTimeout(function() { agregarLog('NONE Standard Electronics'); }, 50);
+                setTimeout(function() { agregarLog('Personal Computer Model - 98A'); }, 150);
+                setTimeout(function() { agregarLog('\\nU-Boot 2020.10-rc2-00109-g28cd2a1bc7 (Jan 10 2026 - 18:23:41 -0400)'); }, 400);
+                setTimeout(function() { agregarLog('\\nDRAM: 128MiB'); }, 700);
+                setTimeout(function() { agregarLog('MMC:   sdhci@01c28000: 0'); }, 850);
+                setTimeout(function() { agregarLog('Loading default environment'); }, 1000);
+                setTimeout(function() { agregarLog('\\nIn:    serial                       [##########]'); }, 1300);
+                setTimeout(function() { agregarLog('Out:   serial                       [##########]'); }, 1450);
+                setTimeout(function() { agregarLog('Err:   serial                       [##########]'); }, 1600);
+                setTimeout(function() { agregarLog('SYSTEM: Mesh connection found.'); }, 1900);
+                setTimeout(function() { agregarLog('IDE:   Bus 0: not available'); }, 2050);
+                setTimeout(function() { agregarLog('\\nHit any key to stop autoboot: 0'); }, 2450);
+                setTimeout(function() { agregarLog('reading uboot.env...'); }, 2600);
+                setTimeout(function() { agregarLog('FAST: Misaligned buffer address (007dfc10/007dfc40)'); }, 2700);
+                setTimeout(function() { agregarLog('6215 bytes read in 19 ms (319.3 KiB/s)'); }, 2850);
+                setTimeout(function() { agregarLog('reading u-boot.img...'); }, 3000);
+                setTimeout(function() { agregarLog('FAST: Misaligned buffer address (007dfc10/007dfc40)'); }, 3100);
+                setTimeout(function() { agregarLog('368940 bytes read in 178ms (2 MiB/s)'); }, 3250);
+                setTimeout(function() { agregarLog('Setting up image ID - 45227801'); }, 3400);
+                setTimeout(function() {
                     agregarLog('\\n== Flattened Device Tree blob at 00aa0000');
                     agregarLog('## Booting os using the FDT blob at 00aa0000...');
                 }, 3700);
 
-                setTimeout(() => {
+                setTimeout(function() {
                     cajaInput.style.display = 'block';
                     inputName.focus();
                 }, 4300);
@@ -162,3 +170,13 @@ function generarPaginaCompleta() {
     </html>
   `;
 }
+
+app.get('/', (req, res) => { res.send(generarPaginaCompleta()); });
+app.get('/musica', (req, res) => { res.send(generarPaginaCompleta()); });
+app.get('/juegos', (req, res) => { res.send(generarPaginaCompleta()); });
+app.get('/pdf', (req, res) => { res.send(generarPaginaCompleta()); });
+app.get('/promos', (req, res) => { res.send(generarPaginaCompleta()); });
+
+app.listen(PORT, () => {
+  console.log(`Servidor seguro encendido en el puerto ${PORT}`);
+});
