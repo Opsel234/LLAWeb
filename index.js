@@ -1,11 +1,3 @@
-const express = require('express');
-const path = require('path');
-const app = express();
-const PORT = process.env.PORT || 10000;
-
-// Servir archivos estáticos (aquí le decimos que busque el CSS en la raíz o carpetas)
-app.use(express.static(__dirname));
-
 function generarPaginaCompleta() {
   return `
     <!DOCTYPE html>
@@ -17,21 +9,21 @@ function generarPaginaCompleta() {
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
-        <svg width="0" height="0" style="position:absolute">
-          <filter id="chromatic-aberration">
-            <feOffset in="SourceGraphic" dx="1.5" dy="0" result="red"/>
-            <feOffset in="SourceGraphic" dx="-1.5" dy="0" result="blue"/>
-            <feColorMatrix in="red" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="redMatrix"/>
-            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="greenMatrix"/>
-            <feColorMatrix in="blue" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blueMatrix"/>
-            <feBlend in="redMatrix" in2="greenMatrix" mode="screen" result="rb"/>
-            <feBlend in="rb" in2="blueMatrix" mode="screen"/>
-          </filter>
-        </svg>
+        <div id="bloqueo-google">
+            <div class="alerta-roja">🛑 ACCESO RESTRINGIDO 🛑</div>
+            <p class="log-linea">Para ingresar al sistema debes verificar tu identidad.</p>
+            <p class="subtexto-google">Este lobby requiere una cuenta escolar o personal de Google vinculada.</p>
+            
+            <button class="btn-google" id="btn-login-google">
+                <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/web-24dp/logo_googleg_color_web_24dp.png" alt="Google">
+                Iniciar sesión con Google
+            </button>
+        </div>
 
-        <div id="pantalla-inicio">
+        <div id="pantalla-inicio" style="display: none;">
             <button class="btn-encender" id="btn-start">⚡ ENTER LOBBY ⚡</button>
         </div>
+
         <div id="terminal-login">
             <div class="consola-caja" id="consola-historial"></div>
             <div class="consola-caja" id="caja-input" style="display: none;">
@@ -41,6 +33,7 @@ function generarPaginaCompleta() {
                 </div>
             </div>
         </div>
+
         <div id="contenido-principal">
             <h1>🎮 LLAWeb 🚀</h1>
             <div class="usuario-activo" id="mostrar-usuario"></div>
@@ -56,7 +49,11 @@ function generarPaginaCompleta() {
                 <p>Navega usando los botones de arriba para explorar las herramientas.</p>
             </div>
         </div>
+
         <script>
+            const pGoogle = document.getElementById('bloqueo-google');
+            const btnGoogle = document.getElementById('btn-login-google');
+            
             const pInicio = document.getElementById('pantalla-inicio');
             const terminal = document.getElementById('terminal-login');
             const principal = document.getElementById('contenido-principal');
@@ -66,6 +63,45 @@ function generarPaginaCompleta() {
             const historial = document.getElementById('consola-historial');
             const cajaInput = document.getElementById('caja-input');
 
+            // --- SIMULACIÓN DE LOGIN DE GOOGLE ---
+            btnGoogle.addEventListener('click', function() {
+                btnGoogle.innerText = "Conectando con Google...";
+                btnGoogle.disabled = true;
+
+                // Abre un pop-up pequeño simulando el login real
+                const ancho = 500, alto = 600;
+                const izquierda = (screen.width / 2) - (ancho / 2);
+                const arriba = (screen.height / 2) - (alto / 2);
+                
+                const popup = window.open(
+                    'about:blank', 
+                    'GoogleAuth', 
+                    \`width=\${ancho},height=\${alto},top=\${arriba},left=\${izquierda},scrollbars=no,resizable=no\`
+                );
+
+                // Escribe un diseño bonito dentro del pop-up falso
+                popup.document.write(\`
+                    <html lang="es">
+                    <head><title>Iniciando sesión con Google</title></head>
+                    <body style="font-family:sans-serif; text-align:center; padding-top:80px; background:#f8f9fa; color:#3c4043;">
+                        <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/web-24dp/logo_googleg_color_web_24dp.png" style="width:48px;">
+                        <h2>Iniciando sesión</h2>
+                        <p style="color:#5f6368;font-size:14px;">Vinculando cuenta con LLAWeb...</p>
+                        <div style="margin:40px auto; width:30px; height:30px; border:4px solid #f3f3f3; border-top:4px solid #4285f4; border-radius:50%; animation:spin 1s linear infinite;"></div>
+                        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+                    </body>
+                    </html>
+                \`);
+
+                // A los 2.5 segundos cierra el popup y da acceso
+                setTimeout(() => {
+                    popup.close();
+                    pGoogle.style.display = 'none'; // Quita el bloqueo
+                    pInicio.style.display = 'flex'; // Muestra el botón ENTER LOBBY
+                }, 2500);
+            });
+
+            // --- LÓGICA DE LA BIOS (IGUAL QUE ANTES) ---
             function agregarLog(mensaje) {
                 const linea = document.createElement('div');
                 linea.className = 'log-linea';
@@ -126,13 +162,3 @@ function generarPaginaCompleta() {
     </html>
   `;
 }
-
-app.get('/', (req, res) => { res.send(generarPaginaCompleta()); });
-app.get('/musica', (req, res) => { res.send(generarPaginaCompleta()); });
-app.get('/juegos', (req, res) => { res.send(generarPaginaCompleta()); });
-app.get('/pdf', (req, res) => { res.send(generarPaginaCompleta()); });
-app.get('/promos', (req, res) => { res.send(generarPaginaCompleta()); });
-
-app.listen(PORT, () => {
-  console.log(`Servidor limpio corriendo en puerto ${PORT}`);
-});
