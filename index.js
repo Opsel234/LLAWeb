@@ -118,10 +118,10 @@ function generarPaginaCompleta() {
                     terminal.style.display = 'flex';
                     
                     // Secuencia inicial
-                    setTimeout(() => agregarLog(' starting systems...'), 100);
-                    setTimeout(() => agregarLog(' llaweb@server:~$ sudo su apt update', 'cmd'), 900);
-                    setTimeout(() => agregarLog(' Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease'), 1700);
-                    setTimeout(() => agregarLog(' Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]'), 2300);
+                    setTimeout(() => agregarLog(' starting systems...'), 1000);
+                    setTimeout(() => agregarLog(' llaweb@server:~$ sudo su apt update', 'cmd'), 1200);
+                    setTimeout(() => agregarLog(' Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease'), 1900);
+                    setTimeout(() => agregarLog(' Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]'), 2800);
                     
                     // Aquí llamamos a la animación de la barra de carga en un solo bloque de tiempo (2900ms)
                     setTimeout(() => iniciarBarraProgreso(), 2900);
@@ -131,8 +131,8 @@ function generarPaginaCompleta() {
                     setTimeout(() => agregarLog(' Building dependency tree... Done'), 7500);
                     setTimeout(() => agregarLog(' All packages are up to date.'), 8000);
                     
-                    setTimeout(() => agregarLog(' ==> LLAWeb services successfully initialized.', 'info'), 8600);
-                    setTimeout(() => agregarLog(' ==> YOUR ONLINE ENVIRONMENT IS LIVE 🚀', 'info'), 9100);
+                    setTimeout(() => agregarLog(' LLAWeb services successfully initialized.', 'info'), 8600);
+                    setTimeout(() => agregarLog(' YOUR ONLINE ENVIRONMENT IS LIVE 🚀', 'info'), 9100);
                     
                     setTimeout(() => {
                         agregarLog(' ==> Por favor, introduce tu nombre para registrar la sesión:');
