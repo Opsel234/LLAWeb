@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Servir archivos estáticos como el style.css
+// Servir archivos estáticos como el style.cs
 app.use(express.static(__dirname));
 
 function generarPaginaCompleta() {
