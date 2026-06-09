@@ -118,7 +118,7 @@ function generarPaginaCompleta() {
                     terminal.style.display = 'flex';
                     
                     // Secuencia inicial
-                    setTimeout(() => agregarLog(' starting systems...'), 1000);
+                    setTimeout(() => agregarLog(' starting systems...'), 4000);
                     setTimeout(() => agregarLog(' llaweb@server:~$ sudo su apt update', 'cmd'), 1200);
                     setTimeout(() => agregarLog(' Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease'), 1900);
                     setTimeout(() => agregarLog(' Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]'), 2800);
