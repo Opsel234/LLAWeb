@@ -96,7 +96,7 @@ function generarPaginaCompleta() {
 
             // Función especial para la barra de carga que se actualiza sola
             function iniciarBarraProgreso() {
-                const contenedorLinea = agregarLog('Fetching updates: [*...................] 5%');
+                const contenedorLinea = agregarLog('Fetching updates:  [*...................] 5%');
                 const textoSpan = contenedorLinea.querySelector('.log-mensaje');
                 
                 setTimeout(() => textoSpan.innerText = 'Fetching updates: [*****...............] 25%', 600);
@@ -119,23 +119,22 @@ function generarPaginaCompleta() {
                     
                     // Secuencia inicial
                     setTimeout(() => agregarLog(' starting systems...'), 4000);
-                    setTimeout(() => agregarLog(' llaweb@server:~$ sudo su apt update', 'cmd'), 1200);
-                    setTimeout(() => agregarLog(' Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease'), 1900);
-                    setTimeout(() => agregarLog(' Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]'), 2800);
+                    setTimeout(() => agregarLog(' llaweb@server:~$ sudo su apt update', 'cmd'), 5600);
+                    setTimeout(() => agregarLog(' Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease'), 6700);
+                    setTimeout(() => agregarLog(' Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]'), 7000);
                     
                     // Aquí llamamos a la animación de la barra de carga en un solo bloque de tiempo (2900ms)
                     setTimeout(() => iniciarBarraProgreso(), 2900);
 
                     // Finalización del proceso (los tiempos continúan después de que termina la barra, a los 2900 + 4000 = 6900ms aprox)
-                    setTimeout(() => agregarLog(' Reading package lists... Done'), 7000);
-                    setTimeout(() => agregarLog(' Building dependency tree... Done'), 7500);
-                    setTimeout(() => agregarLog(' All packages are up to date.'), 8000);
+                    setTimeout(() => agregarLog(' Reading package lists... Done'), 7800);
+                    setTimeout(() => agregarLog(' Building dependency tree... Done'), 8800);
+                    setTimeout(() => agregarLog(' All packages are up to date.'), 9000);
                     
-                    setTimeout(() => agregarLog(' LLAWeb services successfully initialized.', 'info'), 8600);
-                    setTimeout(() => agregarLog(' YOUR ONLINE ENVIRONMENT IS LIVE 🚀', 'info'), 9100);
+                    setTimeout(() => agregarLog(' LLAWeb services successfully initialized.', 'info'), 9400);
                     
                     setTimeout(() => {
-                        agregarLog(' ==> Por favor, introduce tu nombre para registrar la sesión:');
+                        agregarLog(' user name:');
                         cajaInput.style.display = 'block';
                         inputName.focus();
                     }, 9800);
