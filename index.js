@@ -91,6 +91,19 @@ function generarPaginaCompleta() {
                 linea.innerHTML = '<span class="log-timestamp">⟦' + obtenerHora() + '⟧</span><span class="' + claseMensaje + '">' + mensaje + '</span>';
                 historial.appendChild(linea);
                 terminal.scrollTop = terminal.scrollHeight;
+                return linea; // Retorna la línea para poder usarla después
+            }
+
+            // Función especial para la barra de carga que se actualiza sola
+            function iniciarBarraProgreso() {
+                const contenedorLinea = agregarLog('Fetching updates: [*...................] 5%');
+                const textoSpan = contenedorLinea.querySelector('.log-mensaje');
+                
+                setTimeout(() => textoSpan.innerText = 'Fetching updates: [*****...............] 25%', 600);
+                setTimeout(() => textoSpan.innerText = 'Fetching updates: [*******.............] 34%', 1200);
+                setTimeout(() => textoSpan.innerText = 'Fetching updates: [***************.....] 68%', 2000);
+                setTimeout(() => textoSpan.innerText = 'Fetching updates: [*******************.] 92%', 2800);
+                setTimeout(() => textoSpan.innerText = 'Fetching updates: [********************] 100%', 3600);
             }
 
             btnStart.addEventListener('click', function() {
@@ -104,27 +117,22 @@ function generarPaginaCompleta() {
                 } else {
                     terminal.style.display = 'flex';
                     
-                    // Tu secuencia de comandos con tiempos calibrados
+                    // Secuencia inicial
                     setTimeout(() => agregarLog(' starting systems...'), 100);
                     setTimeout(() => agregarLog(' llaweb@server:~$ sudo su apt update', 'cmd'), 900);
-                    
                     setTimeout(() => agregarLog(' Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease'), 1700);
                     setTimeout(() => agregarLog(' Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]'), 2300);
                     
-                    // Bloques de carga que editaste (organizados de forma fluida)
-                    setTimeout(() => agregarLog(' Fetching updates: [*...................] 5%'), 2900);
-                    setTimeout(() => agregarLog(' Fetching updates: [*****...............] 25%'), 3500);
-                    setTimeout(() => agregarLog(' Fetching updates: [*******.............] 34%'), 4100);
-                    setTimeout(() => agregarLog(' Fetching updates: [***************.....] 68%'), 4900);
-                    setTimeout(() => agregarLog(' Fetching updates: [*******************.] 92%'), 5700);
-                    setTimeout(() => agregarLog(' Fetching updates: [********************] 100%'), 6400);
+                    // Aquí llamamos a la animación de la barra de carga en un solo bloque de tiempo (2900ms)
+                    setTimeout(() => iniciarBarraProgreso(), 2900);
 
-                    // Finalización del sistema e input de usuario
+                    // Finalización del proceso (los tiempos continúan después de que termina la barra, a los 2900 + 4000 = 6900ms aprox)
                     setTimeout(() => agregarLog(' Reading package lists... Done'), 7000);
                     setTimeout(() => agregarLog(' Building dependency tree... Done'), 7500);
                     setTimeout(() => agregarLog(' All packages are up to date.'), 8000);
-                    setTimeout(() => agregarLog(' loading', 'info'), 8600);
-                    setTimeout(() => agregarLog(' check in', 'info'), 9100);
+                    
+                    setTimeout(() => agregarLog(' ==> LLAWeb services successfully initialized.', 'info'), 8600);
+                    setTimeout(() => agregarLog(' ==> YOUR ONLINE ENVIRONMENT IS LIVE 🚀', 'info'), 9100);
                     
                     setTimeout(() => {
                         agregarLog(' ==> Por favor, introduce tu nombre para registrar la sesión:');
