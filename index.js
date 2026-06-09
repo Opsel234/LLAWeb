@@ -3,9 +3,39 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Esto le dice a Node que cualquier archivo HTML, CSS o juego 
-// que metas dentro de una carpeta llamada "public", se verá en internet.
+// Intento 1: Buscar en la carpeta public si existe
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Intento 2: Si lo anterior no funciona, mostrar el diseño directamente aquí
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>LLAWeb - El sitio del Colegio</title>
+        <style>
+            body { font-family: Arial, sans-serif; background-color: #121212; color: white; text-align: center; padding: 50px; }
+            h1 { color: #8a2be2; }
+            .menu { display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
+            .boton { background-color: #1e1e1e; border: 2px solid #8a2be2; color: white; padding: 20px 40px; font-size: 18px; cursor: pointer; border-radius: 10px; text-decoration: none; transition: 0.3s; }
+            .boton:hover { background-color: #8a2be2; transform: scale(1.05); }
+        </style>
+    </head>
+    <body>
+        <h1>🎮 LLAWeb 🚀</h1>
+        <p>¡Bienvenidos a la plataforma oficial de los estudiantes!</p>
+        <div class="menu">
+            <a href="#" class="boton">📺 YouTube / Música</a>
+            <a href="#" class="boton">🕹️ Juegos Gratis</a>
+            <a href="#" class="boton">📄 Convertidor PDF</a>
+            <a href="#" class="boton">📢 Promociones</a>
+        </div>
+    </body>
+    </html>
+  `);
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
